@@ -18,11 +18,7 @@ def _get_prompt(additional=""):
     additional_instruction = """
         # additional instruction
     """
-    return (
-            baseline_instructions
-            + additional_instruction
-            + additional
-    )
+    return baseline_instructions + additional_instruction + additional
 
 
 class TestGenerator:
