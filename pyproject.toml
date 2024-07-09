@@ -5,14 +5,27 @@ description = "Automatically generate unit tests"
 authors = ["iahsanujunda"]
 license = "MIT"
 readme = "README.md"
+keywords = [
+    "unit test",
+    "test generation"
+]
 classifiers = [
-    "Programming Language :: Python :: 3",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3.10",
     "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent"
+    "Operating System :: OS Independent",
+    "Topic :: Education :: Testing",
+    "Topic :: Software Development :: Testing",
+    "Topic :: Software Development :: Testing :: Unit",
+]
+packages = [
+    { include = "opyni", from = "src" }
 ]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.10"
 langchain = "^0.2.6"
 langchain-community = "^0.2.6"
 langchain-openai = "^0.1.13"
@@ -20,16 +33,38 @@ langchain-openai = "^0.1.13"
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.2"
 pytest-asyncio = "^0.23.7"
+pre-commit = "^3.7.1"
+
+[tool.black]
+line-length = 88
+target_version = ['py310']
+include = '\.pyi?$'
+exclude = '''
+
+(
+  /(
+      \.eggs          # exclude a few common directories in the
+    | \.git           # root of the project
+    | \.pytest_cache
+    | \.mypy_cache
+    | \.venv
+    | venv
+    | _build
+    | build
+    | dist
+    | pynguin.egg-info
+  )/
+)
+'''
+
+[tool.pytest.ini_options]
+minversion = 6.0
+addopts = "-m 'not call_openai'"
+testpaths = ["tests"]
+markers = """
+    call_openai: mark tests that call OpenAI APIs
+"""
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.pytest.ini_options]
-minversion = 6.0
-addopts = "-ra -q -m 'not call_openai'"
-testpaths = ["tests"]
-asyncio_mode = "auto"
-markers = """
-    call_openai: mark tests that call OpenAI APIs
-"""
