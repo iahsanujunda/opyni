@@ -52,7 +52,7 @@ exclude = '''
     | _build
     | build
     | dist
-    | pynguin.egg-info
+    | opyni.egg-info
   )/
 )
 '''
