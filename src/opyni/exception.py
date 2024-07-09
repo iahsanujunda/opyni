@@ -1,0 +1,2 @@
+class FileLoaderError(Exception):
+    pass
