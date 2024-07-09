@@ -35,4 +35,4 @@ jobs:
         run: poetry run black --diff --check .
 
       - name: Run tests
-        run: poetry run pytest --cov=src --cov=tests --cov-branch --cov-report=term-missing tests/
+        run: poetry run pytest
