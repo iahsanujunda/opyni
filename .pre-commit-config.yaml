@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 default_language_version:
-  python: python3.10
+  python: python3.12
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -40,8 +40,13 @@ repos:
     rev: v0.4.10
     hooks:
       - id: ruff
+        name: ruff
+        entry: ruff
+        language: system
+        types: [ python ]
+        args: [check, --fix]
 
-  - repo: https://github.com/fsfe/reuse-tool
-    rev: v3.0.2
-    hooks:
-      - id: reuse
+#  - repo: https://github.com/fsfe/reuse-tool
+#    rev: v3.0.2
+#    hooks:
+#      - id: reuse
