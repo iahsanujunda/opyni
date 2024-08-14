@@ -63,3 +63,7 @@ def main(argv: list[str] | None = None) -> int:
     _setup_logging(parsed.verbosity)
 
     return run_opyni(input_file=parsed.input_file)
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))
