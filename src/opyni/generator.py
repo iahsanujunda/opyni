@@ -1,3 +1,6 @@
+import logging
+import os
+
 from langchain_community.callbacks import get_openai_callback
 from langchain_community.document_loaders.text import TextLoader
 from langchain_core.prompts import ChatPromptTemplate
@@ -5,6 +8,15 @@ from langchain_openai.chat_models import ChatOpenAI
 from langchain_core.output_parsers.string import StrOutputParser
 
 from opyni.exception import FileLoaderError
+
+_LOGGER = logging.getLogger(__name__)
+
+
+def run_opyni(input_file=""):
+    generator = TestGenerator(api_key=os.getenv("OPENAI_API_KEY"), source_file_location=input_file)
+    output = generator.generate()
+    _LOGGER.info(output)
+    return
 
 
 def _get_prompt(additional=""):

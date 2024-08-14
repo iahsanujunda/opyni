@@ -30,6 +30,8 @@ black = "^24.4.2"
 langchain = "^0.2.6"
 langchain-community = "^0.2.6"
 langchain-openai = "^0.1.13"
+simple-parsing = "0.1.5"
+rich = "^13.7.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.2"
