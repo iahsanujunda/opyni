@@ -14,6 +14,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 def run_opyni():
+    _LOGGER.debug(f"input file to process: {config.configuration.input_file}")
     generator = TestGenerator(
         api_key=os.getenv("OPENAI_API_KEY"),
         source_file_location=config.configuration.input_file
@@ -23,12 +24,14 @@ def run_opyni():
     return
 
 
-def _get_prompt(additional=""):
+def _get_prompt(additional="No extra instruction"):
     baseline_instructions = """
         # instruction
         You are coding assistant whose task is to generate unit test cases based on a python source code.
         Use pytest to write the test cases.
         When mocking is required, use `patch` decorator from `unittest.mock` package.
+        If the mocked object need to be used in multiple test cases, make it into fixtures, take
+        extra care of the scope of the fixtures.
     """
 
     additional_instruction = """
@@ -39,11 +42,11 @@ def _get_prompt(additional=""):
 
 class TestGenerator:
     def __init__(self, api_key, source_file_location):
-        if not source_file_location.endswith(".txt"):
-            raise ValueError("The source file must be a .txt file")
+        if not source_file_location.endswith(".py"):
+            raise ValueError("The source file must be a .py file")
         self.llm = ChatOpenAI(
             openai_api_key=api_key,
-            model="gpt-4o",
+            model="gpt-4o-mini",
         )
         self.source_file_location = source_file_location
 
@@ -71,9 +74,9 @@ class TestGenerator:
 
         with get_openai_callback() as cb:
             output = chain.invoke({"input": document})
-            print(f"Total Tokens: {cb.total_tokens}")
-            print(f"Prompt Tokens: {cb.prompt_tokens}")
-            print(f"Completion Tokens: {cb.completion_tokens}")
-            print(f"Total Cost (USD): ${cb.total_cost}")
+            _LOGGER.debug(f"Total Tokens: {cb.total_tokens}")
+            _LOGGER.debug(f"Prompt Tokens: {cb.prompt_tokens}")
+            _LOGGER.debug(f"Completion Tokens: {cb.completion_tokens}")
+            _LOGGER.debug(f"Total Cost (USD): ${cb.total_cost}")
 
             return output

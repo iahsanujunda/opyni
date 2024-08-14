@@ -50,14 +50,14 @@ def _set_configuration(configuration: config.Configuration) -> None:
     config.configuration = configuration
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None) -> None:
     if argv is None:
         argv = sys.argv
     if len(argv) <= 1:
         argv.append("--help")
 
     argument_parser = _create_argument_parser()
-    parsed = argument_parser.parse_args(argv)
+    parsed = argument_parser.parse_args(argv[1:])
 
     _setup_logging(parsed.verbosity)
     _set_configuration(parsed.config)
