@@ -4,14 +4,16 @@ import sys
 import simple_parsing
 import argparse
 
+import opyni.configuration as config
+
 from opyni.generator import run_opyni
 
 
 def _setup_logging(verbosity: int) -> None:  # noqa: FBT001
     level = logging.WARNING
-    if verbosity == 0:
+    if verbosity == 1:
         level = logging.INFO
-    if verbosity >= 1:
+    if verbosity >= 2:
         level = logging.DEBUG
 
     handler: logging.Handler = logging.StreamHandler()
@@ -19,7 +21,7 @@ def _setup_logging(verbosity: int) -> None:  # noqa: FBT001
     logging.basicConfig(
         level=level,
         format="%(asctime)s [%(levelname)s]"
-        "(%(name)s:%(funcName)s:%(lineno)d): %(message)s",
+               "(%(name)s:%(funcName)s:%(lineno)d): %(message)s",
         datefmt="[%X]",
         handlers=[handler],
     )
@@ -28,7 +30,7 @@ def _setup_logging(verbosity: int) -> None:  # noqa: FBT001
 def _create_argument_parser() -> argparse.ArgumentParser:
     parser = simple_parsing.ArgumentParser(
         add_option_string_dash_variants=simple_parsing.DashVariant.UNDERSCORE_AND_DASH,
-        description="Opyni is an automatci unit test generator",
+        description="Opyni is an automatic unit test generator",
     )
 
     parser.add_argument(
@@ -39,16 +41,13 @@ def _create_argument_parser() -> argparse.ArgumentParser:
         default=0,
         help="verbose output (repeat for increased verbosity)",
     )
-    parser.add_argument(
-        "-f",
-        "--input-file",
-        action="count",
-        dest="input_file",
-        default="",
-        help="Input file",
-    )
+    parser.add_arguments(config.Configuration, dest="config")
 
     return parser
+
+
+def _set_configuration(configuration: config.Configuration) -> None:
+    config.configuration = configuration
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -61,8 +60,9 @@ def main(argv: list[str] | None = None) -> int:
     parsed = argument_parser.parse_args(argv)
 
     _setup_logging(parsed.verbosity)
+    _set_configuration(parsed.config)
 
-    return run_opyni(input_file=parsed.input_file)
+    return run_opyni()
 
 
 if __name__ == "__main__":

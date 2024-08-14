@@ -7,13 +7,17 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai.chat_models import ChatOpenAI
 from langchain_core.output_parsers.string import StrOutputParser
 
+import opyni.configuration as config
 from opyni.exception import FileLoaderError
 
 _LOGGER = logging.getLogger(__name__)
 
 
-def run_opyni(input_file=""):
-    generator = TestGenerator(api_key=os.getenv("OPENAI_API_KEY"), source_file_location=input_file)
+def run_opyni():
+    generator = TestGenerator(
+        api_key=os.getenv("OPENAI_API_KEY"),
+        source_file_location=config.configuration.input_file
+    )
     output = generator.generate()
     _LOGGER.info(output)
     return
