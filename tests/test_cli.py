@@ -6,9 +6,9 @@ import pytest
 from src.opyni.cli import main
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def mock_run_opyni():
-    with patch('src.opyni.cli.run_opyni') as mock:
+    with patch("src.opyni.cli.run_opyni") as mock:
         yield mock
 
 
@@ -26,5 +26,5 @@ def test_main_with_arguments(mock_parser, _, mock_run_opyni):
     parser = MagicMock()
     mock_parser.return_value = parser
 
-    main(['opyni', '-vv'])
+    main(["opyni", "-vv"])
     mock_run_opyni.assert_called_once()
