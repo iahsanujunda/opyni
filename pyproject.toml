@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "opyni"
-version = "0.1.0"
+version = "0.1.1"
 description = "Automatically generate unit tests"
 authors = ["iahsanujunda"]
 license = "MIT"
@@ -23,6 +23,9 @@ classifiers = [
 packages = [
     { include = "opyni", from = "src" }
 ]
+include = [
+    { path = "tests", format = "sdist" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -30,12 +33,19 @@ black = "^24.4.2"
 langchain = "^0.2.6"
 langchain-community = "^0.2.6"
 langchain-openai = "^0.1.13"
+simple-parsing = "0.1.5"
+rich = "^13.7.1"
+pydantic = "^2.8.2"
+pydantic-argparse = "0.9.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.2"
 pytest-asyncio = "^0.23.7"
 pre-commit = "^3.7.1"
 ruff = "^0.5.7"
+
+[tool.poetry.scripts]
+opyni = "opyni.cli:main"
 
 [tool.black]
 line-length = 88
