@@ -22,15 +22,13 @@ def _setup_logging(verbosity: int) -> Console:
         level = logging.DEBUG
 
     console = Console(tab_size=4)
-    handler = RichHandler(
-        rich_tracebacks=True, log_time_format="[%X]", console=console
-    )
+    handler = RichHandler(rich_tracebacks=True, log_time_format="[%X]", console=console)
     handler.setFormatter(logging.Formatter("%(message)s"))
 
     logging.basicConfig(
         level=level,
         format="%(asctime)s [%(levelname)s]"
-               "(%(name)s:%(funcName)s:%(lineno)d): %(message)s",
+        "(%(name)s:%(funcName)s:%(lineno)d): %(message)s",
         datefmt="[%X]",
         handlers=[handler],
     )
@@ -65,9 +63,7 @@ _REQUIRED_ENV = "OPENAI_API_KEY"
 
 def main(argv: list[str] | None = None) -> int:
     if _REQUIRED_ENV not in os.environ:
-        pprint(
-            f"""Environment variable '{_REQUIRED_ENV}' not set."""
-        )
+        pprint(f"""Environment variable '{_REQUIRED_ENV}' not set.""")
         return -1
 
     if argv is None:

@@ -35,7 +35,7 @@ def run_opyni() -> ReturnCode:
 
         generator = TestGenerator(
             api_key=os.getenv("OPENAI_API_KEY"),
-            source_file_location=config.configuration.input_file
+            source_file_location=config.configuration.input_file,
         )
         output = generator.generate()
         markdown = Markdown(output)
