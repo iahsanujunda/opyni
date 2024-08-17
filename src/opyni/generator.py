@@ -1,3 +1,4 @@
+import enum
 import logging
 import os
 
@@ -6,22 +7,45 @@ from langchain_community.document_loaders.text import TextLoader
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai.chat_models import ChatOpenAI
 from langchain_core.output_parsers.string import StrOutputParser
+from rich import get_console
+from rich.markdown import Markdown
 
 import opyni.configuration as config
 from opyni.exception import FileLoaderError
 
-_LOGGER = logging.getLogger(__name__)
+console = get_console()
+_logger = logging.getLogger("rich")
 
 
-def run_opyni():
-    _LOGGER.debug(f"input file to process: {config.configuration.input_file}")
-    generator = TestGenerator(
-        api_key=os.getenv("OPENAI_API_KEY"),
-        source_file_location=config.configuration.input_file
-    )
-    output = generator.generate()
-    _LOGGER.info(output)
-    return
+@enum.unique
+class ReturnCode(enum.IntEnum):
+    """Return codes for Pynguin to signal result."""
+
+    OK = 0
+    """Symbolises that the execution ended as expected."""
+
+    FAILED = 1
+    """Symbolises that the execution failed."""
+
+
+def run_opyni() -> ReturnCode:
+    try:
+        _logger.info("Test generation starting...")
+        _logger.debug(f"input file to process: {config.configuration.input_file}")
+
+        generator = TestGenerator(
+            api_key=os.getenv("OPENAI_API_KEY"),
+            source_file_location=config.configuration.input_file
+        )
+        output = generator.generate()
+        markdown = Markdown(output)
+        console.print(markdown)
+
+        _logger.info("Test generation ended!")
+        return ReturnCode.OK
+    except Exception as error:
+        _logger.error(error)
+        return ReturnCode.FAILED
 
 
 def _get_prompt(additional="No extra instruction"):
@@ -74,9 +98,9 @@ class TestGenerator:
 
         with get_openai_callback() as cb:
             output = chain.invoke({"input": document})
-            _LOGGER.debug(f"Total Tokens: {cb.total_tokens}")
-            _LOGGER.debug(f"Prompt Tokens: {cb.prompt_tokens}")
-            _LOGGER.debug(f"Completion Tokens: {cb.completion_tokens}")
-            _LOGGER.debug(f"Total Cost (USD): ${cb.total_cost}")
+            _logger.info(f"Total Tokens: {cb.total_tokens}")
+            _logger.info(f"Prompt Tokens: {cb.prompt_tokens}")
+            _logger.info(f"Completion Tokens: {cb.completion_tokens}")
+            _logger.info(f"Total Cost (USD): ${cb.total_cost}")
 
             return output

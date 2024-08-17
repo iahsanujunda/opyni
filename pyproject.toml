@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "opyni"
-version = "0.1.0"
+version = "0.1.1"
 description = "Automatically generate unit tests"
 authors = ["iahsanujunda"]
 license = "MIT"
