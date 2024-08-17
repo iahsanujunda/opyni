@@ -23,6 +23,9 @@ classifiers = [
 packages = [
     { include = "opyni", from = "src" }
 ]
+include = [
+    { path = "tests", format = "sdist" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"

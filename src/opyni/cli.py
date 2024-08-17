@@ -7,6 +7,7 @@ import argparse
 
 from rich.console import Console
 from rich.logging import RichHandler
+from rich.pretty import pprint
 
 import opyni.configuration as config
 
@@ -63,6 +64,11 @@ _REQUIRED_ENV = "OPENAI_API_KEY"
 
 
 def main(argv: list[str] | None = None) -> int:
+    if _REQUIRED_ENV not in os.environ:
+        pprint(
+            f"""Environment variable '{_REQUIRED_ENV}' not set."""
+        )
+        return -1
 
     if argv is None:
         argv = sys.argv
@@ -71,15 +77,8 @@ def main(argv: list[str] | None = None) -> int:
 
     argument_parser = _create_argument_parser()
     parsed = argument_parser.parse_args(argv[1:])
-
     console = _setup_logging(parsed.verbosity)
     _set_configuration(parsed.config)
-
-    if _REQUIRED_ENV not in os.environ:
-        console.print(
-            f"""Environment variable '{_REQUIRED_ENV}' not set."""
-        )
-        return -1
 
     with console.status("Running Opyni...\n"):
         return run_opyni().value
